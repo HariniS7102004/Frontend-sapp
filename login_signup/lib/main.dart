@@ -1,7 +1,6 @@
-
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 void main() {
   runApp(SchoolApp());
 }
@@ -28,6 +27,75 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController mailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+
+  Future<void> authenticateUser(String email, String password) async {
+  var url = Uri.parse(isLogin
+      ? 'http://127.0.0.1:8000/api/login/'  // Login endpoint
+      : 'http://127.0.0.1:8000/api/signup/' // Signup endpoint
+      );
+
+  try {
+    var response = await http.post(
+      url,
+      body: {
+        'email': email,
+        'password': password,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var jsonData = jsonDecode(response.body);
+      print('Success: $jsonData');
+      // Show success message or navigate to another page
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Success'),
+            content: Text('Login or Signup Successful!'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  // You can navigate to another page here if needed
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      // If the response is not successful, show an error dialog
+      _showErrorDialog('Error ${response.statusCode}: ${response.reasonPhrase}');
+    }
+  } catch (error) {
+    // Handle exceptions like network issues
+    _showErrorDialog('An error occurred: $error');
+  }
+}
+
+// Function to show an error dialog
+void _showErrorDialog(String message) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -314,10 +382,11 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             );*/
                           } else {
-                            print(mailController.text);
-                            print(passwordController.text);
-                          }
-                          ;
+                            authenticateUser(
+                                mailController.text, passwordController.text);
+                            //print(mailController.text);
+                            //print(passwordController.text);
+                          };
                         }, //page after login
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xff8399f9),

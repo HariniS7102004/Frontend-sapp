@@ -120,7 +120,6 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                       SizedBox(height: 16),
-                      //Getting user inputs
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -139,11 +138,6 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(11.0),
-                            /*borderSide: BorderSide(
-                              //width: 1,
-                              color: Color(0xff5f7bf7),
-                              style: BorderStyle.solid,
-                            ),*/
                           ),
                         ),
                       ),
@@ -192,16 +186,11 @@ class _LoginPageState extends State<LoginPage> {
                             style: TextStyle(color: Colors.black),
                           ),
                         ),
-                        //SizedBox(height: 16),
                         TextField(
                           controller: confirmPasswordController,
                           decoration: InputDecoration(
                             floatingLabelBehavior: FloatingLabelBehavior.never,
                             labelText: 'Re-enter Password',
-                            /*confirmPasswordController != passwordController
-                                    ? 'Enter same password as given above'
-                                    : 'Re-enter Password',*/
-                            //confirmPasswordText,
                             prefixIcon: Icon(
                               Icons.lock,
                               color: Color(0xff8399f9),
@@ -238,7 +227,6 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ],
-                      //SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: () {
                           if (mailController.text.isEmpty ||
@@ -247,10 +235,6 @@ class _LoginPageState extends State<LoginPage> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  /*title: Text(
-                                    'M',
-                                    style: TextStyle(color: Colors.red),
-                                  ),*/
                                   content: Text(
                                     mailController.text.isEmpty
                                         ? 'Enter an e-mail'
@@ -288,7 +272,7 @@ class _LoginPageState extends State<LoginPage> {
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context)
-                                            .pop(); // Close the dialog
+                                            .pop(); 
                                       },
                                       child: Text(''),
                                     ),
@@ -300,7 +284,7 @@ class _LoginPageState extends State<LoginPage> {
                             AuthService.authenticateUser(
                               mailController.text, passwordController.text,isLogin,context);
                           }
-                        }, //page after login
+                        }, 
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xff8399f9),
                           foregroundColor: Colors.white,

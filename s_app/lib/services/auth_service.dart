@@ -9,8 +9,8 @@ class AuthService {
     BuildContext context,
   ) async {
     var url = Uri.parse(isLogin
-        ? 'http://127.0.0.1:8000/api/login/' // Login endpoint
-        : 'http://127.0.0.1:8000/api/signup/' // Signup endpoint
+        ? 'http://127.0.0.1:8000/api/login/' 
+        : 'http://127.0.0.1:8000/api/signup/' 
     );
     http.Response? response;
     try {

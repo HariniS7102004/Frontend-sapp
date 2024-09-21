@@ -1,4 +1,22 @@
 import 'package:flutter/material.dart';
+import 'screens/login_signup.dart';
+
+void main() {
+  runApp(SchoolApp());
+}
+
+class SchoolApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: LoginPage(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+
+/*import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 void main() {
@@ -27,74 +45,155 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController mailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+  
 
   Future<void> authenticateUser(String email, String password) async {
-  var url = Uri.parse(isLogin
+    var url = Uri.parse(isLogin
       ? 'http://127.0.0.1:8000/api/login/'  // Login endpoint
       : 'http://127.0.0.1:8000/api/signup/' // Signup endpoint
       );
-
-  try {
-    var response = await http.post(
-      url,
-      body: {
-        'email': email,
-        'password': password,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      var jsonData = jsonDecode(response.body);
-      print('Success: $jsonData');
-      // Show success message or navigate to another page
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Success'),
-            content: Text('Login or Signup Successful!'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  // You can navigate to another page here if needed
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
+    http.Response? response;
+    try {
+      var response = await http.post(
+        url,
+        body: {
+          'email': email,
+          'password': password,
         },
       );
-    } else {
-      // If the response is not successful, show an error dialog
-      _showErrorDialog('Error ${response.statusCode}: ${response.reasonPhrase}');
+     //response.statusCode = response.statusCode;
+      //print response.statusCode);
+      
+    } catch (error) {}
+    finally{
+      // Handle exceptions like network issues
+      //_showErrorDialog('An error occurred: $error');
+       if (response!=null && response.statusCode == 200 && isLogin == true) {
+        //var jsonData = jsonDecode(response.body);
+        //print('Success: $jsonData');
+        // Show success message or navigate to another page
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Success',style: TextStyle(color: Colors.green[400]),),
+              content: Text('Login Successful!',style: TextStyle(fontSize: 20),),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    // You can navigate to another page here if needed
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      } else if (response!=null && response.statusCode
+  ==201 && isLogin==false){
+        //_showErrorDialog('Error ${response.statusCode}: ${response.reasonPhrase}');
+        showDialog(
+          context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(
+                  'Success',
+                  style: TextStyle(color: Colors.green[400]),
+                ),
+                content: Text(
+                  'Signup Successful!',
+                  style: TextStyle(fontSize: 20),
+                ),
+                actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                  child: Text(''),
+                ),
+              ],
+            );
+          },
+        );
+      } else if  (response!=null && response.statusCode
+  ==400 && isLogin==false){
+        // If the response is not successful, show an error dialog
+        //_showErrorDialog('Error ${response.statusCode}: ${response.reasonPhrase}');
+        showDialog(
+          context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(
+                  'Invalid Password',
+                  style: TextStyle(color: Colors.red),
+                ),
+                content: Text(
+                  'Password must have atleast 8 characters',
+                  style: TextStyle(fontSize: 20),
+                ),
+                actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                  child: Text(''),
+                ),
+              ],
+            );
+          },
+        );
+      } else if ( response!=null && response.statusCode
+  ==400 && isLogin==true){
+        // If the response is not successful, show an error dialog
+        //_showErrorDialog('Error ${response.statusCode}: ${response.reasonPhrase}');
+        showDialog(
+          context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(
+                  '',
+                  style: TextStyle(color: Colors.red),
+                ),
+                content: Text(
+                  'Invalid Credentials or New User, Please Sign Up',
+                  style: TextStyle(fontSize: 20),
+                ),
+                actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                  child: Text(''),
+                ),
+              ],
+            );
+          },
+        );
+      }
     }
-  } catch (error) {
-    // Handle exceptions like network issues
-    _showErrorDialog('An error occurred: $error');
   }
-}
 
-// Function to show an error dialog
-void _showErrorDialog(String message) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Error'),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Close the dialog
-            },
-            child: Text('OK'),
-          ),
-        ],
-      );
-    },
-  );
-}
+  // Function to show an error dialog
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
 
   @override
@@ -374,18 +473,9 @@ void _showErrorDialog(String message) {
                                 );
                               },
                             );
-                            /*SizedBox(
-                              height: 1666,
-                              child: Text(
-                                'Enter same password',
-                                style: TextStyle(color: Colors.red),
-                              ),
-                            );*/
                           } else {
                             authenticateUser(
-                                mailController.text, passwordController.text);
-                            //print(mailController.text);
-                            //print(passwordController.text);
+                              mailController.text, passwordController.text);
                           };
                         }, //page after login
                         style: ElevatedButton.styleFrom(
@@ -436,25 +526,4 @@ void _showErrorDialog(String message) {
       ),
     );
   }
-}
-
-//To run, cd . , flutter run
-
-
-/*import 'package:flutter/material.dart';
-import 'screens/login_signup.dart';
-
-void main() {
-  runApp(SchoolApp());
-}
-
-class SchoolApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: LoginPage(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
 }*/
-
